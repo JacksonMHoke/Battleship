@@ -6,26 +6,27 @@
 
 using namespace std;
 
-pair<int, int> getCoordinates() {
+namespace game {
+    pair<int, int> getCoordinates() {
 
-}
+    }
 
-void display() {
+    void display() {
 
-}
+    }
 
-void populate(vector<vector<int>>& grid, vector<int>& hps) {
+    void populate(vector<vector<int>>& grid, vector<int>& hps) {
 
-}
+    }
 
-void turn (vector<vector<int>>& opposingGrid, vector<int>& hps) {
+    void turn (vector<vector<int>>& opposingGrid, vector<int>& hps) {
 
-}
+    }
 
-bool hasWon(int player, vector<int>& hps) {
+    bool hasWon(int player, vector<int>& hps) {
 
-}
+    }
+    void run() {
 
-void run() {
-
+    }
 }
