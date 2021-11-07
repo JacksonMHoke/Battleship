@@ -38,6 +38,7 @@ namespace game {
         //place all ships
         int x,y,r;
         bool invalid;
+        string s;
         for (int i=1; i<numShips; ++i) {
             //takes in input, repeats when invalid input
             while(true) {
@@ -65,9 +66,72 @@ namespace game {
         }
     }
 
-    // void turn (vector<vector<int>>& opposingGrid, vector<int>& hps) {
+    void turn (vector<vector<int>>& opposingGrid, vector<int>& hps) {
+        int x, y;
+        cout << "Enter the coordinates to attack: ";
+        cin >> x >> y;
 
-    // }
+        while(opposingGrid[x][y] <= 0 || x < 0 || x >= 10 || y < 0 || y > 10){
+            
+            if(x < 0 || x >= 10 || y < 0 || y > 10){
+                cout << "The coordinates are out of range.\n";
+            }
+            else if(opposingGrid[x][y] <= 0){
+                cout << "Coordinates already have been attacked.\n";
+            }
+
+            cout << "Please enter new coordinates to attack:\n";
+            cin >> x >> y;
+        }
+        int ship = opposingGrid[x][y];
+        
+        if(ship >= 1){
+            hps[ship - 1]--;
+            opposingGrid[x][y] *= -1;
+            
+            if(hps[ship - 1] == 0){
+                int brokenship = opposingGrid[x][y];
+                int destroyedvalue = INT32_MIN + 1;
+                opposingGrid[x][y] = destroyedvalue;
+
+                //checks if the ship is horizontal
+                if(x > 0 && opposingGrid[x-1][y] == brokenship || x != 9 && opposingGrid[x+1][y] == brokenship){
+                    int i = x;
+                    while(i > 0 && opposingGrid[i][y] == brokenship){
+                        opposingGrid[i][y] = destroyedvalue;
+                        i--;
+                    }
+                    
+                    i = x;
+
+                    while(i < 0 && opposingGrid[i][y] == brokenship){
+                        opposingGrid[i][y] = destroyedvalue;
+                        i++;
+                    }
+                }
+                else{
+                    //the ship is vertical
+                    int i = y;
+                    while(i > 10 && opposingGrid[x][i] == brokenship){
+                        opposingGrid[x][i] = destroyedvalue;
+                        i--;
+                    }
+                    
+                    i = y;
+
+                    while(i < 10 && opposingGrid[x][i] == brokenship){
+                        opposingGrid[x][i] = destroyedvalue;
+                        i++;
+                    }
+                }
+                
+            }
+        }
+        else if(ship == 0){
+            opposingGrid[x][y] = INT32_MIN;
+        }
+
+    }
 
     bool hasWon(vector<int>& hps) {
         for (auto h : hps) {
@@ -77,6 +141,34 @@ namespace game {
     }
     
     void run() {
-        
+        //populating player 1
+        vector<vector<int>> player1Grid(dimension, vector<int>(dimension, 0));
+        vector<int> player1Hp;
+        cout << "Player 1 choose your ship's positions, Player 2 look away.\n";
+        populate(player1Grid, player1Hp);
+
+
+        //populating player 2
+        vector<vector<int>> player2Grid(dimension, vector<int>(dimension, 0));
+        vector<int> player2Hp;
+        cout << "Player 2 choose your ship's positions, Player 1 look away.\n";
+        populate(player2Grid, player2Hp);
+
+        //run turns until game is decided
+        while (true) {
+            cout << "Player 1's turn:\n";
+            turn(player2Grid, player2Hp);
+            if (hasWon(player2Hp)) {
+                cout << "Player 1 wins!";
+                break;
+            }
+
+            cout << "Player 2's turn:\n";
+            turn(player1Grid, player1Hp);
+            if (hasWon(player1Hp)) {
+                cout << "Player 2 wins!";
+                break;
+            }
+        }
     }
 }
