@@ -69,9 +69,12 @@ namespace game {
 
     // }
 
-    // bool hasWon(int player, vector<int>& hps) {
-
-    // }
+    bool hasWon(vector<int>& hps) {
+        for (auto h : hps) {
+            if (h!=0) return false;
+        }
+        return true;
+    }
     
     void run() {
         
