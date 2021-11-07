@@ -27,19 +27,19 @@ using namespace std;
 
 namespace game {
 
-    static const int numShips=6;
+    static const int numShips=5;
     static const int dimension=10;
 
     void populate(vector<vector<int>>& grid, vector<int>& hps) {
         //initializing hp values
-        hps.resize(numShips);
+        hps.resize(numShips+1);
         hps[1]=2; hps[2]=3; hps[3]=3; hps[4]=5; hps[5]=6;
 
         //place all ships
         int x,y,r;
         bool invalid;
         string s;
-        for (int i=1; i<numShips; ++i) {
+        for (int i=1; i<numShips+1; ++i) {
             //takes in input, repeats when invalid input
             while(true) {
                 invalid=false;
@@ -139,6 +139,25 @@ namespace game {
         }
         return true;
     }
+
+    void display(vector<vector<int>>& grid) {
+        for (auto r : grid) {
+            for (auto i : r) {
+                switch (i) {
+                    case INT32_MIN+1: cout << "D "; break;
+                    case INT32_MIN: cout << "X "; break;
+                    case -1: cout << "O "; break;
+                    case -2: cout << "O "; break;
+                    case -3: cout << "O "; break;
+                    case -4: cout << "O "; break;
+                    case -5: cout << "O "; break;
+                    case -6: cout << "O "; break;
+                    default: cout << "- ";
+                }
+            }
+            cout << endl;
+        }
+    }
     
     void run() {
         //populating player 1
@@ -146,7 +165,7 @@ namespace game {
         vector<int> player1Hp;
         cout << "Player 1 choose your ship's positions, Player 2 look away.\n";
         populate(player1Grid, player1Hp);
-
+        display(player1Grid);
 
         //populating player 2
         vector<vector<int>> player2Grid(dimension, vector<int>(dimension, 0));
@@ -155,20 +174,29 @@ namespace game {
         populate(player2Grid, player2Hp);
 
         //run turns until game is decided
+        string temp;
         while (true) {
+            display(player2Grid);
             cout << "Player 1's turn:\n";
             turn(player2Grid, player2Hp);
             if (hasWon(player2Hp)) {
                 cout << "Player 1 wins!";
                 break;
             }
+            display(player2Grid);
+            cout << "ENTER OK TO GO TO NEXT TURN: ";
+            cin >> temp;
 
+            display(player1Grid);
             cout << "Player 2's turn:\n";
             turn(player1Grid, player1Hp);
             if (hasWon(player1Hp)) {
                 cout << "Player 2 wins!";
                 break;
             }
+            display(player1Grid);
+            cout << "ENTER OK TO GO TO NEXT TURN: ";
+            cin >> temp;
         }
     }
 }
